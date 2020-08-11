@@ -1,0 +1,210 @@
+openapi: 3.0.1
+info:
+  title: $ServiceName$
+  description: |
+    Current certification:
+    -
+    # Service description
+    -
+  contact:
+    name: CCC Features Team
+    url: https://dev.azure.com/repsol-digital-team/CloudCompetenceCenter/_wiki/wikis/CloudCompetenceCenter.wiki/7294/Features-Team
+  version: X.Y
+externalDocs:
+  description: $ServiceName$ $Version$ documentation
+  url: https://[ToComplete]
+servers:
+- url: https://cccapilaunchereng.cloudapp.repsol.com/api/$ServiceName$/v$VersionNumber$
+  description: Development server
+- url: https://cccapilauncher.cloudapp.repsol.com/api/$ServiceName$/v$VersionNumber$
+  description: Production server
+tags:
+- name: service
+  description: Service operations
+- name: task
+  description: Task operations - Monitor status of running service operations
+paths:
+  /{taskId}/status:
+    post:
+      tags:
+      - task
+      summary: Check task status
+      description: |
+        Returns the status of an ongoing service operation.
+
+        Any service operation returns a task id when the execution is accepted. This id can be used later to check the status of such task.
+      operationId: getTaskStatusById
+      parameters:
+      - $ref: '#/components/parameters/subscriptionIdParam'
+      - $ref: '#/components/parameters/taskIdParam'
+      responses:
+        202:
+          description: The operation is still executing, check back later
+        200:
+          description: The operation has finished executing and the status is returned in the response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStatus'
+  /{taskId}/logs:
+    post:
+      tags:
+      - task
+      summary: Retrieve task logs
+      description: |
+        Returns the available logs for a service operation.
+
+        Any service operation returns a task id when the execution is accepted. This id can be used later to check the logs of such task.
+      operationId: getTaskLogsById
+      parameters:
+      - $ref: '#/components/parameters/subscriptionIdParam'
+      - $ref: '#/components/parameters/taskIdParam'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskLogs'
+security:
+  - oAuthAAD:
+    - https://cccapilauncher.cloudapp.repsol.com/.default
+components:
+  securitySchemes:
+    oAuthAAD:
+      type: oauth2
+      description: This API uses AAD OAuth 2.0 with the client credentials flow. [More info](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow#get-a-token)
+      flows:
+        clientCredentials:
+          tokenUrl: https://login.microsoftonline.com/0a25214f-ee52-483c-b96b-dc79f3227a6f/oauth2/v2.0/token
+          scopes:
+            https://cccapilauncher.cloudapp.repsol.com/.default: default scope
+  parameters:
+    subscriptionIdParam:
+      in: header
+      name: SubscriptionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Id of the Azure subscription where the resources should be provisioned/decommissioned.
+    taskIdParam:
+      in: path
+      name: taskId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID of the task
+    callbackUrlParam:
+      in: query
+      name: callbackUrl
+      schema:
+        type: string
+        format: uri
+        example: https://myserver.com/send/status/here
+      description: Callback URL where status notifications will be sent during task execution. If this parameter is omitted, task status can be obtained by polling `/{taskId}/status` endpoint.
+    callbackLogsParam:
+      in: query
+      name: callbackLogs
+      schema:
+        type: string
+        format: uri
+        example: https://myserver.com/send/logs/here
+      description: Callback URL where logs notifications will be sent during task execution. If this parameter is omitted, task logs can be obtained by polling `/{taskId}/logs` endpoint.
+  responses:
+    Accepted:
+      description: $ServiceName$ operation has been accepted, but it is still being processed. The status of the ongoing task can be monitored by querying location headers.
+      headers:
+        Location:
+          description: 'Link to the $ServiceName$ task status with the following format: `/{taskId}/status`'
+          schema:
+            type: string
+        LogsLocation:
+          description: 'Link to the $ServiceName$ task logs with the following format: `/{taskId}/logs`'
+          schema:
+            type: string
+  callbacks:
+    statusEvent:
+      '{$request.query.callbackUrl}':
+        post:
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/StatusEvent'
+            required: true
+          responses:
+            200:
+              description: The server accepted the callback
+    logEvent:
+      '{$request.query.callbackLogs}':
+        post:
+          requestBody:
+            content:
+              text/plain; charset=utf-8:
+                schema:
+                  $ref: '#/components/schemas/LogEvent'
+            required: true
+          responses:
+            200:
+              description: The server accepted the callback
+  schemas:
+    TaskStatus:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          description: The task status
+          enum:
+          - TaskCompleted
+          - TaskFailed
+        Value:
+          type: string
+          description: When Status is `TaskFailed`, it contains a text describing the cause(s) of the error(s)
+    TaskLogs:
+      type: array
+      items:
+        $ref: '#/components/schemas/TaskLog'
+    TaskLog:
+      type: object
+      required:
+        - Timestamp
+        - Type
+        - Value
+      properties:
+        Timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the log trace
+        Type:
+          type: string
+          enum:
+            - Status
+            - Log
+          description: The type of the log trace. "Status" for traces about the task status and "Log" for traces generated by the task execution.
+        Value:
+          type: string
+          description: The log trace value.
+    StatusEvent:
+      type: object
+      required:
+        - TaskId
+        - Name
+      properties:
+        TaskId:
+          type: string
+          format: uuid
+          description: ID of the task
+        Name:
+          type: string
+          description: The name of the task status event
+          enum:
+          - TaskQueued
+          - TaskStarted
+          - TaskCompleted
+    LogEvent:
+      type: string
+      description: The log trace value.
