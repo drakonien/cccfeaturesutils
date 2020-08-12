@@ -3,6 +3,7 @@
 
 name: VSCode Extension Bundle
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
   pull_request:
