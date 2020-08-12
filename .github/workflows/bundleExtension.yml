@@ -32,7 +32,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ env.GITHUB_REF_SLUG }}
-        body_path: ./LASTEST_CHANGELOG.md
+        body_path: /home/runner/work/cccfeaturesutils/cccfeaturesutils/LASTEST_CHANGELOG.md
         release_name: Release ${{ env.GITHUB_REF_SLUG }}
         draft: false
         prerelease: false
