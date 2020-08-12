@@ -1,8 +1,12 @@
 # CCCFeaturesUtils
 
-`CCCFeaturesUtils` is a VSCode extension to help automatize the develpment process of services for the Cloud Compentence Center's Features group.
+`CCCFeaturesUtils` is a VSCode extension to help automatize the development process of services for the Cloud Compentence Center's groups (iniatially developed for Features group, hence the name).
 
 ## Features
+
+The extension performs a series of actions and informs of the progress and status in the progress bar.
+
+The features are:
 
 - Swagger scaffolding generation to describe a service, based on the information already present in said service. It creates the yaml file.
 To run this, either run the `Generate Swagger` command in the command palette or right click in a folder in the file explorer and select `Generate Swagger` from the context menu.
@@ -13,13 +17,15 @@ To run this, either run the `Generate Swagger` command in the command palette or
 
 - Scaffolds a new task in the tasks folder. It asks for the name of the new task. This functionality can be invoked using the `New Task` command from the command palette or the `New Task...` contextual menu in the file explorer.
 
+- Scaffolds a new service in the services folder. It asks for the name of the new service and it's version (defaults to 1.0). This functionality can be invoked using the `New Service` command from the command palette or the `New Service...` contextual menu in the file explorer.
+
 - Increases a version of a service. Eg: from 2.0 to 3.0. It creates a copy of the base version and makes the appropiate changes. This functionality can be invoked using the `Increase version` command from the command palette or the `Increase version...` contextual menu in the file explorer.
 
 - Restore packages for a version of a service. It calls `nuget restore -packagesdirectory .packages` for the specified version of a services. This functionality can be invoked using the `Restore Packages` command from the command palette or the `Restore Packages...` contextual menu in the file explorer.
 
-![commandPalette](./images/commandPalette.png)
+![commandPalette](images/commandPalette.png)
 
-![contextMenu](/images/contextMenu.png)
+![contextMenu](images/contextMenu.png)
 
 ## Installation
 
@@ -33,18 +39,20 @@ Visual Studio Code version 1.43.0 or up.
 
 The extension behaviour can be configured using the settings:
 
-- Regular expression used to validate the working folder (Service/Version).
-- Regular expression used to validate the Tasks folder (Service/Version/Tasks).
-- Switch to mark a new task as GA when using `New Task` action. Defaults to `false`.
+- Regular expression used to validate the services working folder (/Service).
+- Regular expression used to validate the individual service working folder (/Service/Version).
+- Regular expression used to validate the Tasks folder (/Service/Version/Tasks).
+- Switch to mark a new task as preview when using `New Task` action. Defaults to `true`.
 - Switch to overwrite files when using `New Task`. Defaults to `true`.
 - List of folder and files to exclude when copying file when `Increase version`. Defaults to `.packages`.
 - Switch to generate the swagger file if missing when using `Increase version`. Defaults to `false`.
 
-![commandPalette](./images/settings.png)
+![commandPalette](images/settings.png)
 
 ## Known Issues
 
-- When processing `multiline` fields of a task it has to be checked if it really is an array or a JSON. Because it not always is a string.
+- When processing `multiline` fields of a task it has to be checked if it really is an array or if it is a JSON. Because it not always is a string.
+- When regenerating a swagger file it does not use existing information. So \[TOCOMPLETE\] placeholders may appear when they are already filled in the previously existing file.
 
 ## Release Notes
 
@@ -52,5 +60,5 @@ Review the CHANGELOG.
 
 ## Future capabilities
 
-- Use progress window in all operations.
 - Implement a formatter for README files to prevent common mistakes.
+- Use a list of regular expressions to validate folders, instead of a single one.

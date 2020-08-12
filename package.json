@@ -1,0 +1,290 @@
+{
+	"name": "cccfeaturesutils",
+	"displayName": "cccfeaturesutils",
+	"description": "Visual Studio Code extension to help in development process for CCC",
+	"version": "1.8.0",
+	"publisher": "DrakoniensLair",
+	"icon": "images/cccfeaturesutils.png",
+	"license": "UNLICENSED",
+	"repository": {
+		"type": "github",
+		"url": "https://github.com/drakonien/cccfeaturesutils"
+	},
+	"engines": {
+		"vscode": "^1.43.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:ccc.GenerateSwagger",
+		"onCommand:ccc.GenerateSwaggerContext",
+		"onCommand:ccc.ConvertToGA",
+		"onCommand:ccc.ConvertToGAContext",
+		"onCommand:ccc.DeprecateService",
+		"onCommand:ccc.DeprecateServiceContext",
+		"onCommand:ccc.AddNewTask",
+		"onCommand:ccc.AddNewTaskContext",
+		"onCommand:ccc.IncreaseVersion",
+		"onCommand:ccc.IncreaseVersionContext",
+		"onCommand:ccc.RestorePackages",
+		"onCommand:ccc.RestorePackagesContext",
+		"onCommand:ccc.CreateService",
+		"onCommand:ccc.CreateServiceContext"
+	],
+	"main": "./dist/extension",
+	"files": [
+		"./images/commandPalette.png",
+		"./images/contextMenu.png",
+		"./images/settings.png",
+		"./resources/[ApifiedServiceName]/[version]/[ServiceName].nuspec",
+		"./resources/[ApifiedServiceName]/[version]/azure-pipelines.yml",
+		"./resources/[ApifiedServiceName]/[version]/packages.config",
+		"./resources/[ApifiedServiceName]/[version]/pspackages.json",
+		"./resources/[ApifiedServiceName]/[version]/README.md",
+		"./resources/[ApifiedServiceName]/[version]/Images/HighLevelDesing.png",
+		"./resources/[ApifiedServiceName]/[version]/Images/Networking.png",
+		"./resources/[ApifiedServiceName]/[version]/Scripts/UnitTests/CCC.[ServiceName].Common.tests.ps1",
+		"./resources/[ApifiedServiceName]/[version]/Scripts/[Operation]-[ServiceName].Common.tests.ps1",
+		"./resources/[ApifiedServiceName]/[version]/Scripts/CCC.[ServiceName].Common.tests.psm1",
+		"./resources/[ApifiedServiceName]/[version]/Scripts/CCC.[ServiceName].Common.tests.psd1",
+		"./resources/[ApifiedServiceName]/[version]/Tasks/[Operation]/icon.png",
+		"./resources/[ApifiedServiceName]/[version]/Tasks/[Operation]/make.json",
+		"./resources/[ApifiedServiceName]/[version]/Tasks/[Operation]/task.json",
+		"./resources/[ApifiedServiceName]/[version]/Templates/[ServiceName].json",
+		"./resources/[ApifiedServiceName]/[version]/Tests/ARMTemplate/[TestNumber].[TestName].parameters.json",
+		"./resources/[ApifiedServiceName]/[version]/Tests/MainScript/[Operation]/[TestNumber].[TestName].parameters.json",
+		"./resources/NewTask/icon.png",
+		"./resources/NewTask/make.json",
+		"./resources/NewTask/task.json",
+		"./resources/NewTask/TaskTemplate.ps1",
+		"./resources/deprecated.png",
+		"./resources/swaggerBase.yml"
+	],
+	"contributes": {
+		"commands": [
+			{
+				"command": "ccc.GenerateSwagger",
+				"title": "Generate Swagger...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.GenerateSwaggerContext",
+				"title": "Generate Swagger",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.ConvertToGA",
+				"title": "Convert to GA...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.ConvertToGAContext",
+				"title": "Convert to GA",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.DeprecateService",
+				"title": "Deprecate Service...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.DeprecateServiceContext",
+				"title": "Deprecate Service",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.AddNewTask",
+				"title": "Add new Task...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.AddNewTaskContext",
+				"title": "Add new Task",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.IncreaseVersion",
+				"title": "Increase version...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.IncreaseVersionContext",
+				"title": "Increase version",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.RestorePackages",
+				"title": "Restore Packages...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.RestorePackagesContext",
+				"title": "Restore Packages",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.CreateService",
+				"title": "Add new Service...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.CreateServiceContext",
+				"title": "Add new Service",
+				"category": "CCC"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "ccc.GenerateSwaggerContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.ConvertToGAContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.DeprecateServiceContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.AddNewTaskContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.IncreaseVersionContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.RestorePackagesContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.CreateServiceContext",
+					"when": "false"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "ccc.GenerateSwaggerContext",
+					"group": "cccgroup@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "ccc.ConvertToGAContext",
+					"group": "cccgroup@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "ccc.DeprecateServiceContext",
+					"group": "cccgroup@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "ccc.AddNewTaskContext",
+					"group": "cccgroup@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "ccc.IncreaseVersionContext",
+					"group": "cccgroup@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "ccc.RestorePackagesContext",
+					"group": "cccgroup@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "ccc.CreateServiceContext",
+					"group": "cccgroup@1",
+					"when": "explorerResourceIsFolder"
+				}
+			]
+		},
+		"configuration": {
+			"title": "CCC Features Utils Configuration",
+			"properties": {
+				"ccc.FolderRegExp": {
+					"type": "string",
+					"default": "^.+(CloudCompetenceCenter|CloudFoundation)\\\\(Services|Components)$",
+					"description": "Regular expression used to validate that a folder can contain services or components.",
+					"scope": "application"
+				},
+				"ccc.FolderServiceRegExp": {
+					"type": "string",
+					"default": "^.+(CloudCompetenceCenter|CloudFoundation)\\\\(Services|Components)\\\\\\w+\\\\\\d\\.\\d$",
+					"description": "Regular expression used to validate that a folder is a service or component version.",
+					"scope": "application"
+				},
+				"ccc.FolderTaskRegExp": {
+					"type": "string",
+					"default": "^.+(CloudCompetenceCenter|CloudFoundation)\\\\(Services|Components)\\\\\\w+\\\\\\d\\.\\d\\\\Tasks$",
+					"description": "Regular expression used to validate that a folder is a service or component Tasks folder.",
+					"scope": "application"
+				},
+				"ccc.TaskVersionNumber": {
+					"type": "string",
+					"default": "^\\d\\.\\d$",
+					"description": "Regular expression used to validate that a service version number is in the right format (Major.Minor).",
+					"scope": "application"
+				},
+				"ccc.NewTaskPreview": {
+					"type": "boolean",
+					"default": true,
+					"description": "True if new tasks are marked as preview. Defaults to 'true'.",
+					"scope": "application"
+				},
+				"ccc.NewTaskOverwrite": {
+					"type": "boolean",
+					"default": true,
+					"description": "True to try to overwrite files if already exists when creating a new task, false otherwise. Defaults to 'true'.",
+					"scope": "application"
+				},
+				"ccc.IncreaseVersionExclusions": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"uniqueItems": true,
+						"title": "Item to exclude. It can be a folder or a file."
+					},
+					"default": [
+						".packages"
+					],
+					"description": "Array with file/folder exclusions when increasing version. Defaults to '.packages'.",
+					"scope": "application"
+				},
+				"ccc.IncreaseVersionSwagger": {
+					"type": "boolean",
+					"default": false,
+					"description": "True to create the swagger file if it is missing when creating a new vesion, false to leave it as is. Defaults to 'false'.",
+					"scope": "application"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch",
+		"test-compile": "tsc -p ./"
+	},
+	"devDependencies": {
+		"@types/js-yaml": "latest",
+		"@types/node": "^13.13.5",
+		"@types/vscode": "^1.43.0",
+		"@typescript-eslint/eslint-plugin": "^2.31.0",
+		"@typescript-eslint/parser": "^2.31.0",
+		"eslint": "^6.8.0",
+		"ts-loader": "^8.0.2",
+		"typescript": "^3.7.5",
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12"
+	},
+	"dependencies": {
+		"jimp-compact": "^0.12.1",
+		"js-yaml": "^3.13.1",
+		"uuid": "^8.0.0"
+	}
+}
