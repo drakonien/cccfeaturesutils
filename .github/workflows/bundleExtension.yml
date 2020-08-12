@@ -24,7 +24,7 @@ jobs:
     - run: npm install -g vsce
     - run: vsce package
     - name: Inject slug/short variables # Add to the action variables with information as branch name
-      uses: rlespinasse/github-slug-action@v2
+      uses: rlespinasse/github-slug-action@v2.0.0
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
