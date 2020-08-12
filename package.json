@@ -2,7 +2,7 @@
 	"name": "cccfeaturesutils",
 	"displayName": "cccfeaturesutils",
 	"description": "Visual Studio Code extension to help in development process for CCC",
-	"version": "v1.8.2",
+	"version": "v1.8.3",
 	"publisher": "DrakoniensLair",
 	"icon": "images/cccfeaturesutils.png",
 	"license": "UNLICENSED",
