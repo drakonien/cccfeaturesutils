@@ -25,8 +25,6 @@ jobs:
     - run: vsce package
     - name: Inject slug/short variables # Add to the action variables with information as branch name
       uses: rlespinasse/github-slug-action@2.0.0
-    - run: echo ls /home/runner/work/cccfeaturesutils/cccfeaturesutils/
-    - run: echo ls /home/runner/work/cccfeaturesutils/
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -34,7 +32,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ env.GITHUB_REF_SLUG }}
-        body_path: /home/runner/work/cccfeaturesutils/LASTEST_CHANGELOG.md
+        body_path: LATEST_CHANGELOG.md
         release_name: Release ${{ env.GITHUB_REF_SLUG }}
         draft: false
         prerelease: false
