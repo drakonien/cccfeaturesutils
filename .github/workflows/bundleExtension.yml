@@ -44,6 +44,6 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
         asset_path: /home/runner/work/cccfeaturesutils/cccfeaturesutils/cccfeaturesutils-${{ env.GITHUB_REF_SLUG }}.vsix
-        asset_name: cccfeaturesutils.vsix
+        asset_name: cccfeaturesutils-${{ env.GITHUB_REF_SLUG }}.vsix
         asset_content_type: application/zip
         
