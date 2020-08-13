@@ -2,7 +2,7 @@
 	"name": "cccfeaturesutils",
 	"displayName": "cccfeaturesutils",
 	"description": "Visual Studio Code extension to help in development process for CCC",
-	"version": "v1.8.3",
+	"version": "v1.9.0",
 	"publisher": "DrakoniensLair",
 	"icon": "images/cccfeaturesutils.png",
 	"license": "UNLICENSED",
@@ -30,7 +30,9 @@
 		"onCommand:ccc.RestorePackages",
 		"onCommand:ccc.RestorePackagesContext",
 		"onCommand:ccc.CreateService",
-		"onCommand:ccc.CreateServiceContext"
+		"onCommand:ccc.CreateServiceContext",
+		"onCommand:ccc.GetParameters",
+		"onCommand:ccc.GetParametersContext"
 	],
 	"main": "./dist/extension",
 	"files": [
@@ -132,6 +134,16 @@
 				"command": "ccc.CreateServiceContext",
 				"title": "Add new Service",
 				"category": "CCC"
+			},
+			{
+				"command": "ccc.GetParameters",
+				"title": "Get Parameteres...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.GetParametersContext",
+				"title": "Get Parameters",
+				"category": "CCC"
 			}
 		],
 		"menus": {
@@ -162,6 +174,10 @@
 				},
 				{
 					"command": "ccc.CreateServiceContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.GetParametersContext",
 					"when": "false"
 				}
 			],
@@ -200,6 +216,11 @@
 					"command": "ccc.CreateServiceContext",
 					"group": "cccgroup@1",
 					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "ccc.GetParametersContext",
+					"group": "cccgroup@1",
+					"when": "resource =~ /.*/[Tt]asks/.*/[Tt]ask\\.json/"
 				}
 			]
 		},

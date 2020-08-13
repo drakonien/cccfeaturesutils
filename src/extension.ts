@@ -11,6 +11,7 @@ import { NewTask } from "./NewTask";
 import { IncreaseVersion } from "./IncreaseVersion";
 import { RestorePackages } from "./RestorePackages";
 import { CreateService } from "./CreateService";
+import { GetParameters } from "./GetParameters";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -205,7 +206,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   //#endregion
 
-  //#region Restore Packagesn
+  //#region Restore Packages
 
   let restorePackages = vscode.commands.registerCommand("ccc.RestorePackages", () => {
     // call to start the restoring packages process
@@ -277,6 +278,42 @@ export function activate(context: vscode.ExtensionContext) {
 
   //#endregion
 
+  //#region Get Parameters
+
+  let getParameters = vscode.commands.registerCommand("ccc.GetParameters", () => {
+    // call to start the restoring packages process
+    // read configuration values
+    LogManager.LogDebug("Context [GetParameters] activated");
+
+    let uri: vscode.Uri = GetDefaultPath();
+
+    vscode.window
+      .showOpenDialog({
+        canSelectFiles: false,
+        canSelectFolders: true,
+        canSelectMany: false,
+        openLabel: "Select folder version of Service",
+        defaultUri: uri
+      })
+      .then(fileUri => {
+        if (fileUri && fileUri[0]) {
+          LogManager.LogDebug(`Selected folder is: ${fileUri[0].fsPath}`);
+
+          let path = vscode.Uri.file(fileUri[0].fsPath);
+          // start process
+          GetParameters(path);
+        }
+      });
+  });
+
+  let getParametersContext = vscode.commands.registerCommand("ccc.GetParametersContext", (uri: vscode.Uri) => {
+    LogManager.LogDebug("Context [GetParametersContext] activated for folder: " + uri.fsPath);
+    // start process
+    GetParameters(uri);
+  });
+
+  //#endregion
+
   //#region Register subscriptions
 
   context.subscriptions.push(swaggerMaker);
@@ -293,6 +330,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(restorePackagesContext);
   context.subscriptions.push(newService);
   context.subscriptions.push(newServiceContext);
+  context.subscriptions.push(getParameters);
+  context.subscriptions.push(getParametersContext);
 
   //#endregion
 

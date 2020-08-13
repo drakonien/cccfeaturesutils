@@ -5,7 +5,7 @@ import path = require("path");
 import fs = require("fs");
 import LogManager = require("./LogManager");
 
-export { ValidateFolderPath, ValidateServiceFolderPath, ValidateTaskPath, GetServiceInfo, CreateServiceInfo, GetDefaultPath, CopyFolder, GetDirsAndFiles, ReplaceAll };
+export { ValidateFolderPath, ValidateServiceFolderPath, ValidateTaskPath, GetServiceInfo, GetServiceInfoFromTask, CreateServiceInfo, GetDefaultPath, CopyFolder, GetDirsAndFiles, ReplaceAll };
 
 function ValidateFolderPath(uri: Uri, showErrorMesagae: boolean = true): boolean {
 
@@ -29,6 +29,13 @@ function ValidateTaskPath(uri: Uri, showErrorMesagae: boolean = true): boolean {
     let errorMessage = "Invalid Task folder path. The action must be launched from the path matching";
 
     return ValidatePath(uri, showErrorMesagae, regEspStr, errorMessage);
+}
+
+function GetServiceInfoFromTask(uri: Uri): iServiceData {
+    let parts: string[] = uri.fsPath.split("\\");
+    let serviceFullPath = parts.slice(0, parts.length - 3).join("\\");
+
+    return GetServiceInfo(Uri.parse(serviceFullPath))
 }
 
 function GetServiceInfo(uri: Uri): iServiceData {
