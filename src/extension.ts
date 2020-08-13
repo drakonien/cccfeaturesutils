@@ -12,6 +12,7 @@ import { IncreaseVersion } from "./IncreaseVersion";
 import { RestorePackages } from "./RestorePackages";
 import { CreateService } from "./CreateService";
 import { GetParameters } from "./GetParameters";
+import { GetUseCaseTable } from "./GetUseCaseTable";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -314,6 +315,42 @@ export function activate(context: vscode.ExtensionContext) {
 
   //#endregion
 
+  //#region Get Use Case Table
+
+  let getUseCaseTable = vscode.commands.registerCommand("ccc.GetUseCaseTable", () => {
+    // call to start the restoring packages process
+    // read configuration values
+    LogManager.LogDebug("Context [GetUseCaseTable] activated");
+
+    let uri: vscode.Uri = GetDefaultPath();
+
+    vscode.window
+      .showOpenDialog({
+        canSelectFiles: false,
+        canSelectFolders: true,
+        canSelectMany: false,
+        openLabel: "Select folder version of Service",
+        defaultUri: uri
+      })
+      .then(fileUri => {
+        if (fileUri && fileUri[0]) {
+          LogManager.LogDebug(`Selected folder is: ${fileUri[0].fsPath}`);
+
+          let path = vscode.Uri.file(fileUri[0].fsPath);
+          // start process
+          GetUseCaseTable(path);
+        }
+      });
+  });
+
+  let getUseCaseTableContext = vscode.commands.registerCommand("ccc.GetUseCaseTableContext", (uri: vscode.Uri) => {
+    LogManager.LogDebug("Context [GetUseCaseTableContext] activated for folder: " + uri.fsPath);
+    // start process
+    GetUseCaseTable(uri);
+  });
+
+  //#endregion
+
   //#region Register subscriptions
 
   context.subscriptions.push(swaggerMaker);
@@ -332,6 +369,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(newServiceContext);
   context.subscriptions.push(getParameters);
   context.subscriptions.push(getParametersContext);
+  context.subscriptions.push(getUseCaseTable);
+  context.subscriptions.push(getUseCaseTableContext);
 
   //#endregion
 

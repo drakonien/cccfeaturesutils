@@ -32,7 +32,9 @@
 		"onCommand:ccc.CreateService",
 		"onCommand:ccc.CreateServiceContext",
 		"onCommand:ccc.GetParameters",
-		"onCommand:ccc.GetParametersContext"
+		"onCommand:ccc.GetParametersContext",
+		"onCommand:ccc.GetUseCaseTable",
+		"onCommand:ccc.GetUseCaseTableContext"
 	],
 	"main": "./dist/extension",
 	"files": [
@@ -144,6 +146,16 @@
 				"command": "ccc.GetParametersContext",
 				"title": "Get Parameters",
 				"category": "CCC"
+			},
+			{
+				"command": "ccc.GetUseCaseTable",
+				"title": "Get Use Case Table...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.GetUseCaseTableContext",
+				"title": "Get Use Case Table",
+				"category": "CCC"
 			}
 		],
 		"menus": {
@@ -178,6 +190,10 @@
 				},
 				{
 					"command": "ccc.GetParametersContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.GetUseCaseTableContext",
 					"when": "false"
 				}
 			],
@@ -219,6 +235,11 @@
 				},
 				{
 					"command": "ccc.GetParametersContext",
+					"group": "cccgroup@1",
+					"when": "resource =~ /.*/[Tt]asks/.*/[Tt]ask\\.json/"
+				},
+				{
+					"command": "ccc.GetUseCaseTableContext",
 					"group": "cccgroup@1",
 					"when": "resource =~ /.*/[Tt]asks/.*/[Tt]ask\\.json/"
 				}
@@ -306,6 +327,7 @@
 	"dependencies": {
 		"jimp-compact": "^0.12.1",
 		"js-yaml": "^3.13.1",
+		"serviceinfoutils": "^1.0.2",
 		"uuid": "^8.0.0"
 	}
 }
