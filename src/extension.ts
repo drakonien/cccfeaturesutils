@@ -290,19 +290,27 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.window
       .showOpenDialog({
-        canSelectFiles: false,
-        canSelectFolders: true,
+        canSelectFiles: true,
+        canSelectFolders: false,
         canSelectMany: false,
-        openLabel: "Select folder version of Service",
-        defaultUri: uri
+        openLabel: "Select Task.json file",
+        defaultUri: uri,
+        filters: {
+          'Task.json': ['json']
+        }
       })
       .then(fileUri => {
         if (fileUri && fileUri[0]) {
-          LogManager.LogDebug(`Selected folder is: ${fileUri[0].fsPath}`);
-
-          let path = vscode.Uri.file(fileUri[0].fsPath);
-          // start process
-          GetParameters(path);
+          LogManager.LogDebug(`Selected file is: ${fileUri[0].fsPath}`);
+          // test for a task.json file
+          if (fileUri[0].fsPath.toLowerCase().endsWith('task.json')) {
+            let path = vscode.Uri.file(fileUri[0].fsPath);
+            // start process
+            GetParameters(path);
+          }
+          else {
+            LogManager.LogError("Only 'Task.json' files must be selected.")
+          }
         }
       });
   });
@@ -326,19 +334,27 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.window
       .showOpenDialog({
-        canSelectFiles: false,
-        canSelectFolders: true,
+        canSelectFiles: true,
+        canSelectFolders: false,
         canSelectMany: false,
-        openLabel: "Select folder version of Service",
-        defaultUri: uri
+        openLabel: "Select Task.json file",
+        defaultUri: uri,
+        filters: {
+          'Task.json': ['json']
+        }
       })
       .then(fileUri => {
         if (fileUri && fileUri[0]) {
-          LogManager.LogDebug(`Selected folder is: ${fileUri[0].fsPath}`);
-
-          let path = vscode.Uri.file(fileUri[0].fsPath);
-          // start process
-          GetUseCaseTable(path);
+          LogManager.LogDebug(`Selected file is: ${fileUri[0].fsPath}`);
+          // test for a task.json file
+          if (fileUri[0].fsPath.toLowerCase().endsWith('task.json')) {
+            let path = vscode.Uri.file(fileUri[0].fsPath);
+            // start process
+            GetUseCaseTable(path);
+          }
+          else {
+            LogManager.LogError("Only 'Task.json' files must be selected.")
+          }
         }
       });
   });
