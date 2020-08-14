@@ -4,6 +4,10 @@
 name: VSCode Extension Bundle
 on:
   workflow_dispatch:
+    inputs:
+        tag:
+          description: 'Tag to apply'
+          required: true
   pull_request:
     branches: [ master ]
 jobs:
@@ -29,13 +33,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.GITHUB_HEAD_REF_SLUG }}
+        tag_name: ${{ env.GITHUB_HEAD_REF_SLUG }}${{ github.event.inputs.tag }}
         body_path: LATEST_CHANGELOG.md
-        release_name: Release ${{ env.GITHUB_HEAD_REF_SLUG }}
+        release_name: Release ${{ env.GITHUB_HEAD_REF_SLUG }}${{ github.event.inputs.tag }}
         draft: false
         prerelease: false
     - name: Upload Release Asset
-      id: upload-release-asset 
+      id: upload-release-asset
+      if: github.event.inputs.tag == false
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
