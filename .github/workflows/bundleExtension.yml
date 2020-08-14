@@ -8,8 +8,6 @@ on:
       tag:
         description: 'Tag to apply'
         required: true
-  pull_request:
-    branches: [ master ]
 jobs:
   build:
     runs-on: ubuntu-latest
