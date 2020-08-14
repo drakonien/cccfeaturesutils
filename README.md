@@ -23,9 +23,21 @@ To run this, either run the `Generate Swagger` command in the command palette or
 
 - Restore packages for a version of a service. It calls `nuget restore -packagesdirectory .packages` for the specified version of a services. This functionality can be invoked using the `Restore Packages` command from the command palette or the `Restore Packages...` contextual menu in the file explorer.
 
+- Get the initial structure of the PARAMETERS header or a task. It reads info from the `Task.json` file of a task, opens a new file and writes the info in the new file. This functionality can be invoked using the `Get Parameters` command from the command palette or the `Get Parameters...` contextual menu in the file explorer, if invoked in a `task.json` file.
+
+- Get the table of parameters of a task to use in the Readme. It reads info from the `Task.json` file of a task, opens a new file and writes the info in the new file. This functionality can be invoked using the `Get Use Case Table` command from the command palette or the `Get Use Case Table...` contextual menu in the file explorer, if invoked in a `task.json` file.
+
+### Command palette
+
 ![commandPalette](images/commandPalette.png)
 
+### Context menu on a folder
+
 ![contextMenu](images/contextMenu.png)
+
+### Context menu on a `Task.json` file
+
+![contextMenuTaskJson](images/contextMenuTaskJson.png)
 
 ## Installation
 

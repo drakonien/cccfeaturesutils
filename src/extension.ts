@@ -11,6 +11,8 @@ import { NewTask } from "./NewTask";
 import { IncreaseVersion } from "./IncreaseVersion";
 import { RestorePackages } from "./RestorePackages";
 import { CreateService } from "./CreateService";
+import { GetParameters } from "./GetParameters";
+import { GetUseCaseTable } from "./GetUseCaseTable";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -205,7 +207,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   //#endregion
 
-  //#region Restore Packagesn
+  //#region Restore Packages
 
   let restorePackages = vscode.commands.registerCommand("ccc.RestorePackages", () => {
     // call to start the restoring packages process
@@ -277,6 +279,94 @@ export function activate(context: vscode.ExtensionContext) {
 
   //#endregion
 
+  //#region Get Parameters
+
+  let getParameters = vscode.commands.registerCommand("ccc.GetParameters", () => {
+    // call to start the restoring packages process
+    // read configuration values
+    LogManager.LogDebug("Context [GetParameters] activated");
+
+    let uri: vscode.Uri = GetDefaultPath();
+
+    vscode.window
+      .showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        openLabel: "Select Task.json file",
+        defaultUri: uri,
+        filters: {
+          'Task.json': ['json']
+        }
+      })
+      .then(fileUri => {
+        if (fileUri && fileUri[0]) {
+          LogManager.LogDebug(`Selected file is: ${fileUri[0].fsPath}`);
+          // test for a task.json file
+          if (fileUri[0].fsPath.toLowerCase().endsWith('task.json')) {
+            let path = vscode.Uri.file(fileUri[0].fsPath);
+            // start process
+            GetParameters(path);
+          }
+          else {
+            LogManager.LogError("Only 'Task.json' files must be selected.")
+          }
+        }
+      });
+  });
+
+  let getParametersContext = vscode.commands.registerCommand("ccc.GetParametersContext", (uri: vscode.Uri) => {
+    LogManager.LogDebug("Context [GetParametersContext] activated for folder: " + uri.fsPath);
+    // start process
+    GetParameters(uri);
+  });
+
+  //#endregion
+
+  //#region Get Use Case Table
+
+  let getUseCaseTable = vscode.commands.registerCommand("ccc.GetUseCaseTable", () => {
+    // call to start the restoring packages process
+    // read configuration values
+    LogManager.LogDebug("Context [GetUseCaseTable] activated");
+
+    let uri: vscode.Uri = GetDefaultPath();
+
+    vscode.window
+      .showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        openLabel: "Select Task.json file",
+        defaultUri: uri,
+        filters: {
+          'Task.json': ['json']
+        }
+      })
+      .then(fileUri => {
+        if (fileUri && fileUri[0]) {
+          LogManager.LogDebug(`Selected file is: ${fileUri[0].fsPath}`);
+          // test for a task.json file
+          if (fileUri[0].fsPath.toLowerCase().endsWith('task.json')) {
+            let path = vscode.Uri.file(fileUri[0].fsPath);
+            // start process
+            GetUseCaseTable(path);
+          }
+          else {
+            LogManager.LogError("Only 'Task.json' files must be selected.")
+          }
+        }
+      });
+  });
+
+  let getUseCaseTableContext = vscode.commands.registerCommand("ccc.GetUseCaseTableContext", (uri: vscode.Uri) => {
+    LogManager.LogDebug("Context [GetUseCaseTableContext] activated for folder: " + uri.fsPath);
+    // start process
+    GetUseCaseTable(uri);
+  });
+
+  //#endregion
+
   //#region Register subscriptions
 
   context.subscriptions.push(swaggerMaker);
@@ -293,6 +383,10 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(restorePackagesContext);
   context.subscriptions.push(newService);
   context.subscriptions.push(newServiceContext);
+  context.subscriptions.push(getParameters);
+  context.subscriptions.push(getParametersContext);
+  context.subscriptions.push(getUseCaseTable);
+  context.subscriptions.push(getUseCaseTableContext);
 
   //#endregion
 
