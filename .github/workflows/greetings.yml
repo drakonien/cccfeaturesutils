@@ -1,0 +1,13 @@
+name: Greetings
+
+on: [pull_request, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: 'Please provide as many info as possible to address the problem in the best way possible.'
+        pr-message: 'The naming for branches other than `master` has to be `vMajor.minor.revision` or else the build action will fail.'
