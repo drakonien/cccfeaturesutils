@@ -34,7 +34,7 @@ export async function GetParameters(uri: Uri) {
             });
         });
     } catch (error) {
-        LogManager.LogError(`Error restoring packages: ${error}`);
+        LogManager.LogError(`Error getting parameters: ${error}`);
     }
 }
 

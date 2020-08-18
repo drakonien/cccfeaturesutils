@@ -27,18 +27,18 @@ export async function GetUseCaseTable(uri: Uri) {
             });
 
             await new Promise(resolve => {
-                GetHeaders(uri, progress);
+                GetTable(uri, progress);
                 progress.report({ increment: 40, message: `Table calculated for ${serviceInfo.serviceName} ${serviceInfo.version.Major}.${serviceInfo.version.Minor}` });
                 LogManager.LogSucceeded(`Table calculated for ${serviceInfo.serviceName} ${serviceInfo.version.Major}.${serviceInfo.version.Minor}`);
                 resolve();
             });
         });
     } catch (error) {
-        LogManager.LogError(`Error restoring packages: ${error}`);
+        LogManager.LogError(`Error getting table: ${error}`);
     }
 }
 
-async function GetHeaders(uri: Uri, progressItem: Progress<{ message?: string | undefined; increment?: number | undefined; }>) {
+async function GetTable(uri: Uri, progressItem: Progress<{ message?: string | undefined; increment?: number | undefined; }>) {
 
     progressItem.report({ increment: 20, message: `reading task.json file` });
     var data = fs.readFileSync(uri.fsPath, cts.constants.FILE_ENCODING_STRING);
