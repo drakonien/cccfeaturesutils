@@ -13,6 +13,7 @@ import { RestorePackages } from "./RestorePackages";
 import { CreateService } from "./CreateService";
 import { GetParameters } from "./GetParameters";
 import { GetUseCaseTable } from "./GetUseCaseTable";
+import { GetTestParameters } from "./GetTestParameters";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -367,6 +368,50 @@ export function activate(context: vscode.ExtensionContext) {
 
   //#endregion
 
+  //#region Get Test Parameters
+
+  let getTestParameters = vscode.commands.registerCommand("ccc.GetTestParameters", () => {
+    // call to start the restoring packages process
+    // read configuration values
+    LogManager.LogDebug("Context [GetTestParameters] activated");
+
+    let uri: vscode.Uri = GetDefaultPath();
+
+    vscode.window
+      .showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        openLabel: "Select Task.json file",
+        defaultUri: uri,
+        filters: {
+          'Task.json': ['json']
+        }
+      })
+      .then(fileUri => {
+        if (fileUri && fileUri[0]) {
+          LogManager.LogDebug(`Selected file is: ${fileUri[0].fsPath}`);
+          // test for a task.json file
+          if (fileUri[0].fsPath.toLowerCase().endsWith('task.json')) {
+            let path = vscode.Uri.file(fileUri[0].fsPath);
+            // start process
+            GetTestParameters(path);
+          }
+          else {
+            LogManager.LogError("Only 'Task.json' files must be selected.")
+          }
+        }
+      });
+  });
+
+  let getTestParametersContext = vscode.commands.registerCommand("ccc.GetTestParametersContext", (uri: vscode.Uri) => {
+    LogManager.LogDebug("Context [GetTestParametersContext] activated for folder: " + uri.fsPath);
+    // start process
+    GetTestParameters(uri);
+  });
+
+  //#endregion
+
   //#region Register subscriptions
 
   context.subscriptions.push(swaggerMaker);
@@ -387,6 +432,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(getParametersContext);
   context.subscriptions.push(getUseCaseTable);
   context.subscriptions.push(getUseCaseTableContext);
+  context.subscriptions.push(getTestParameters);
+  context.subscriptions.push(getTestParametersContext);
 
   //#endregion
 
