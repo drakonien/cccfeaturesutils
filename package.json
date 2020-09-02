@@ -2,7 +2,7 @@
 	"name": "cccfeaturesutils",
 	"displayName": "cccfeaturesutils",
 	"description": "Visual Studio Code extension to help in development process for CCC",
-	"version": "1.9.4",
+	"version": "1.10.0",
 	"publisher": "DrakoniensLair",
 	"icon": "images/cccfeaturesutils.png",
 	"license": "UNLICENSED",
@@ -34,7 +34,9 @@
 		"onCommand:ccc.GetParameters",
 		"onCommand:ccc.GetParametersContext",
 		"onCommand:ccc.GetUseCaseTable",
-		"onCommand:ccc.GetUseCaseTableContext"
+		"onCommand:ccc.GetUseCaseTableContext",
+		"onCommand:ccc.GetTestParameters",
+		"onCommand:ccc.GetTestParametersContext"
 	],
 	"main": "./dist/extension",
 	"files": [
@@ -156,6 +158,16 @@
 				"command": "ccc.GetUseCaseTableContext",
 				"title": "Get Use Case Table",
 				"category": "CCC"
+			},
+			{
+				"command": "ccc.GetTestParameters",
+				"title": "Get Test Parameters...",
+				"category": "CCC"
+			},
+			{
+				"command": "ccc.GetTestParametersContext",
+				"title": "Get Test Parameters",
+				"category": "CCC"
 			}
 		],
 		"menus": {
@@ -194,6 +206,10 @@
 				},
 				{
 					"command": "ccc.GetUseCaseTableContext",
+					"when": "false"
+				},
+				{
+					"command": "ccc.GetTestParametersContext",
 					"when": "false"
 				}
 			],
@@ -240,6 +256,11 @@
 				},
 				{
 					"command": "ccc.GetUseCaseTableContext",
+					"group": "cccgroup@1",
+					"when": "resource =~ /.*/[Tt]asks/.*/[Tt]ask\\.json/"
+				},
+				{
+					"command": "ccc.GetTestParametersContext",
 					"group": "cccgroup@1",
 					"when": "resource =~ /.*/[Tt]asks/.*/[Tt]ask\\.json/"
 				}
@@ -319,7 +340,7 @@
 		"@typescript-eslint/eslint-plugin": "^2.34.0",
 		"@typescript-eslint/parser": "^2.34.0",
 		"eslint": "^6.8.0",
-		"ts-loader": "^8.0.2",
+		"ts-loader": "^8.0.3",
 		"typescript": "^3.9.7",
 		"webpack": "^4.44.1",
 		"webpack-cli": "^3.3.12"
@@ -327,7 +348,7 @@
 	"dependencies": {
 		"jimp-compact": "^0.12.1",
 		"js-yaml": "^3.14.0",
-		"serviceinfoutils": "^1.0.7",
+		"serviceinfoutils": "^1.1.0",
 		"uuid": "^8.3.0"
 	}
 }
