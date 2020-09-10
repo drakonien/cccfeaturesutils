@@ -1,12 +1,13 @@
 # Changelog
 
-## 1.10.0 (2020-09-02)
+## 1.11.0 (2020-09-10)
 
 ### Added
 
-- A new funtionality:
-  - `GetTestParameters`: to get the initial structure of a test json file. It reads info from the `Task.json` file of a task, opens a new file and writes the info in the new file. If using contextual menu, the option only appears on `task.json` files.
+- New default `Dockerfile` to service template.
+- Reference to the `samupowershelllint` package.
 
-### Fixed
+### Changed
 
-- A typo in the README in the `Get Parameters` functionality.
+- Update to latest version of `@types/node` (1.0.7).
+- Fixed some typos in `[Operation]-[ServiceName].ps1` service template.
