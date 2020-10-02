@@ -1,6 +1,6 @@
 "use strict";
 
-import { Uri, workspace } from "vscode";
+import { Uri, workspace, env } from "vscode";
 import path = require("path");
 import fs = require("fs");
 import LogManager = require("./LogManager");
@@ -32,20 +32,20 @@ function ValidateTaskPath(uri: Uri, showErrorMesagae: boolean = true): boolean {
 }
 
 function GetServiceInfoFromTask(uri: Uri): iServiceData {
-    let parts: string[] = uri.fsPath.split("\\");
-    let serviceFullPath = parts.slice(0, parts.length - 3).join("\\");
+    let parts: string[] = uri.fsPath.split(path.sep);
+    let serviceFullPath = parts.slice(0, parts.length - 3).join(path.sep);
 
     return GetServiceInfo(Uri.parse(serviceFullPath))
 }
 
 function GetServiceInfo(uri: Uri): iServiceData {
-    let parts: string[] = uri.fsPath.split("\\");
+    let parts: string[] = uri.fsPath.split(path.sep);
 
     if (parts[parts.length - 1].trim() === "") {
         parts.pop();
     }
 
-    let serviceFullPath = parts.slice(0, parts.length - 1).join("\\");
+    let serviceFullPath = parts.slice(0, parts.length - 1).join(path.sep);
 
     let serviceData: iServiceData = {
         serviceName: parts[parts.length - 2],
@@ -80,7 +80,7 @@ function GetDefaultPath(): Uri {
     if (workspace.rootPath !== undefined) {
         return Uri.file(workspace.rootPath);
     }
-    return Uri.file("%HOMEPATH%\\AppData\\Local\\Programs\\Microsoft VS Code\\bin\\code");
+    return Uri.file(env.appRoot);
 }
 
 async function CopyFolder(originalPath: string, newPath: string, exclusions?: string[]) {

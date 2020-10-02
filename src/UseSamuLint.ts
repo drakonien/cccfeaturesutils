@@ -1,13 +1,13 @@
 "use strict";
 
 import { Uri, window, ProgressLocation, workspace, Progress } from "vscode";
-import fs = require("fs");
 import path = require("path");
+import fs = require("fs");
 import LogManager = require("./modules/LogManager");
 import utils = require("./modules/common");
 import cts = require("./modules/constants");
 
-export async function GetTestParameters(uri: Uri) {
+export async function UseSamuLint(uri: Uri) {
 
     try {
         let serviceInfo: iServiceData = utils.GetServiceInfoFromTask(uri);
@@ -28,7 +28,7 @@ export async function GetTestParameters(uri: Uri) {
             });
 
             await new Promise(resolve => {
-                GetTestParams(uri, serviceInfo, progress);
+                SamuLint(uri, serviceInfo, progress);
                 progress.report({ increment: 40, message: `Test Parameters calculated for ${serviceInfo.serviceName} ${serviceInfo.version.Major}.${serviceInfo.version.Minor}` });
                 LogManager.LogSucceeded(`Test Parameters calculated for ${serviceInfo.serviceName} ${serviceInfo.version.Major}.${serviceInfo.version.Minor}`);
                 resolve();
@@ -39,7 +39,7 @@ export async function GetTestParameters(uri: Uri) {
     }
 }
 
-async function GetTestParams(uri: Uri, serviceInfo: iServiceData, progressItem: Progress<{ message?: string | undefined; increment?: number | undefined; }>) {
+async function SamuLint(uri: Uri, serviceInfo: iServiceData, progressItem: Progress<{ message?: string | undefined; increment?: number | undefined; }>) {
 
     progressItem.report({ increment: 20, message: `reading task.json file` });
     var data = fs.readFileSync(uri.fsPath, cts.constants.FILE_ENCODING_STRING);
