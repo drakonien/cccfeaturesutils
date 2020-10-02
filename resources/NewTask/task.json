@@ -32,7 +32,10 @@
   },
   "messages": {
     "scriptPath": "[Operation]-[ServiceName]",
-    "InputGroups": "ResourceGroup,TaskParameterOptions,Outputs,Secrets,Logs"
+    "InputGroups": "ResourceGroup,TaskParameterOptions,Outputs,Secrets,Logs",
+    "ExtraParameters": {
+      "ADGroupTeamProject":"$(System.TeamProject)"
+    }
   },
   "groups": [
     {

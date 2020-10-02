@@ -8,6 +8,7 @@ variables:
   ExtensionRevision: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 1)]
   VstsFeed: 'CloudCompetenceCenter/Repsol-CloudCompetenceCenter-Packages'
   PodIdentitySelector: ccc-aks-orch-pod-$(Podsuffix)
+  AzVersion: 4.5.0
 resources:
   repositories:
     - repository: main
@@ -34,12 +35,13 @@ stages:
           - template: /CI/Templates/CCC-Apification-ContainerImage-Build.yaml
 
   - stage: EngDeploy
+    displayName: "Eng Container Image"
     variables:
       - group: "MarketPlacePublish (Global)"
       - group: "Management (Eng)"
       - group: "MarketPlacePublish (Engineering)"
       - name: ExtensionVersionMajor
-        value: 1
+        value: "1"
       - name: Suffix
         value: eng
       - name: Podsuffix
@@ -48,44 +50,40 @@ stages:
         value: "RepsolCCCExtension$(CertifiedServiceName)Eng"
       - name: PublishExtensionNameService
         value: "Repsol CCC VSTS $(CertifiedServiceNameSeparated) Extension (Engineering)"
-    displayName: "Eng Deployment"
-    dependsOn: Build
     jobs:
       - deployment: ContainerImage
-        displayName: "Container Image Deployment"
-        environment: Eng
-        pool:
-          vmImage: ubuntu-16.04
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: /CI/Templates/CCC-Apification-ContainerImage-Deployment.yaml
-
-      - deployment: AllVersionsExtension
-        displayName: "All Versions Extension Deployment"
-        # dependsOn: ContainerImage
+        displayName: "Container Image Docker Build"
         environment: Eng
         workspace:
           clean: all
         pool:
-          name: CCC
-          # vmImage: windows-latest
+          name: RDT Repsol Linux EU
         strategy:
           runOnce:
             deploy:
               steps:
-                - template: ../extension-pipeline.yaml
-                  parameters:
-                    ArtifactWithLatestsVersion: [ServiceName][Version]
-
+                - template: /CI/Templates/CCC-Apification-ContainerImage-DockerBuild.yaml
+      - deployment: ContainerImageApply
+        displayName: "Container Image Apply"
+        environment: Eng
+        dependsOn: ContainerImage
+        pool:
+          name: CCC
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: /CI/Templates/CCC-Apification-ContainerImage-Apply.yaml
   - stage: AccDeploy
+    displayName: "Acc Container Image"
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: "MarketPlacePublish (Global)"
       - group: "Management (DTAP-Aceptance)"
       - group: "MarketPlacePublish (LDTAP-Acceptance)"
       - name: ExtensionVersionMajor
-        value: 1
+        value: "1"
       - name: Suffix
         value: acc
       - name: Podsuffix
@@ -94,80 +92,70 @@ stages:
         value: "RepsolCCCExtension$(CertifiedServiceName)Acc"
       - name: PublishExtensionNameService
         value: "Repsol CCC VSTS $(CertifiedServiceNameSeparated) Extension (Acceptance)"
-    displayName: "Acc Deployment"
-    dependsOn: Build
     jobs:
       - deployment: ContainerImage
         displayName: "Container Image Deployment"
         environment: Acc
+        workspace:
+          clean: all
         pool:
-          vmImage: ubuntu-16.04
+          name: RDT Repsol Linux EU
         strategy:
           runOnce:
             deploy:
               steps:
                 - template: /CI/Templates/CCC-Apification-ContainerImage-Deployment.yaml
-
-      - deployment: AllVersionsExtension
-        displayName: "All Versions Extension Deployment"
-        dependsOn: ContainerImage
+      - deployment: ContainerImageApply
+        displayName: "Container Image Apply"
         environment: Acc
-        workspace:
-          clean: all
+        dependsOn: ContainerImage
         pool:
           name: CCC
-          # vmImage: windows-latest
         strategy:
           runOnce:
             deploy:
               steps:
-                - template: ../extension-pipeline.yaml
-                  parameters:
-                    ArtifactWithLatestsVersion: [ServiceName][Version]
+                - template: /CI/Templates/CCC-Apification-ContainerImage-Apply.yaml
 
   - stage: LDTAPDeploy
+    displayName: "LDTAP Container Image"
+    dependsOn: AccDeploy
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: "MarketPlacePublish (Global)"
       - group: "Management (DTAP)"
       - group: "MarketPlacePublish (DTAP)"
       - name: ExtensionVersionMajor
-        value: 1
+        value: "1"
       - name: Suffix
-        value:
+        value: ldtap
       - name: Podsuffix
         value: ldtap
       - name: PublishExtensionIdService
         value: "RepsolCCCExtension$(CertifiedServiceName)"
       - name: PublishExtensionNameService
         value: "Repsol CCC VSTS $(CertifiedServiceNameSeparated) Extension"
-    displayName: "LDTAP Deployment"
-    dependsOn: AccDeploy
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - deployment: ContainerImage
-        displayName: "Container Image Deployment"
-        environment: LDTAP
-        pool:
-          vmImage: ubuntu-16.04
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: /CI/Templates/CCC-Apification-ContainerImage-Deployment.yaml
-
-      - deployment: AllVersionsExtension
-        displayName: "All Versions Extension Deployment"
-        dependsOn: ContainerImage
+        displayName: "Container Image Docker Build"
         environment: LDTAP
         workspace:
           clean: all
         pool:
-          name: CCC
-          # vmImage: windows-latest
+          name: RDT Repsol Linux EU
         strategy:
           runOnce:
             deploy:
               steps:
-                - template: ../extension-pipeline.yaml
-                  parameters:
-                    ArtifactWithLatestsVersion: [ServiceName][Version]
+                - template: /CI/Templates/CCC-Apification-ContainerImage-DockerBuild.yaml
+      - deployment: ContainerImageApply
+        displayName: "Container Image Apply"
+        environment: LDTAP
+        dependsOn: ContainerImage
+        pool:
+          name: CCC
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: /CI/Templates/CCC-Apification-ContainerImage-Apply.yaml
