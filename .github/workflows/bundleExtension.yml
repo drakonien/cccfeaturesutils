@@ -27,6 +27,8 @@ jobs:
     - name: Verify npmrc
       run: cat ~/.npmrc
     - run: npm install
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PAT_BASE64 }}
     - run: npm install -g vsce
     - run: vsce package
     - name: Inject slug/short variables # Add to the action variables with information as branch name
