@@ -23,14 +23,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Setup npmrc
-      run: echo -e "; begin auth token\n//pkgs.dev.azure.com/repsol-digital-team/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/registry/:username=username\n//pkgs.dev.azure.com/repsol-digital-team/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/registry/:_password=${{ secrets.NPM_PAT_BASE64 }}\n//pkgs.dev.azure.com/repsol-digital-team/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/registry/:email=someemail@anywhere.com\n//pkgs.dev.azure.com/repsol-digital-team/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/:username=username\n//pkgs.dev.azure.com/repsol-digital-team/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/:_password=${{ secrets.NPM_PAT_BASE64 }}\n//pkgs.dev.azure.com/repsol-digital-team/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/:email=someemail@anywhere.com\n; end auth token" > ~/.npmrc
+      run: echo -e "; begin auth token\n//repsol-digital-team.pkgs.visualstudio.com/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/registry/:username=username\n//repsol-digital-team.pkgs.visualstudio.com/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/registry/:_password=${{ secrets.NPM_PAT_BASE64 }}\n//repsol-digital-team.pkgs.visualstudio.com/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/registry/:email=someemail@anywhere.com\n//repsol-digital-team.pkgs.visualstudio.com/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/:username=username\n//repsol-digital-team.pkgs.visualstudio.com/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/:_password=${{ secrets.NPM_PAT_BASE64 }}\n//repsol-digital-team.pkgs.visualstudio.com/CloudCompetenceCenter/_packaging/Respol-CloudCompentenceCenter-npm/npm/:email=someemail@anywhere.com\n; end auth token" > ~/.npmrc
     - name: Verify npmrc
       run: cat ~/.npmrc
     - run: npm install
     - run: npm install -g vsce
     - run: vsce package
     - name: Inject slug/short variables # Add to the action variables with information as branch name
-      uses: rlespinasse/github-slug-action@2.0.0
+      uses: rlespinasse/github-slug-action@3.3.0
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1

@@ -1,0 +1,22 @@
+{
+    "#settag": {
+        "prefix": "settag",
+        "body": [
+            "\tWrite-CCCVerbose \"Setting tag to resources.\"",
+            "\tSet-CccResourcesTagValue -Resources \\$resources -TagName \"${1:TagName}\" -TagValue \"${2:TagValue}\"",
+            "\tWrite-CCCVerbose \"Tags stablished\"$0"
+        ],
+        "description": "#Set resources tags"
+    },
+    "#setoutput": {
+        "prefix": "setoutput",
+        "body": [
+            "\t\\$output = @{}",
+            "\t\\$output = Invoke-CCCApifOutputVariable -Outputs \\$output -OutputName ${1:OutputName} `",
+            "\t\t-OutputValue ${2:OutputValue} -KeyVaultName ${3:KeyVaultName} `",
+            "\t\t-ServiceName ${4:ServiceName} -ServiceType ${5:ServiceType} -AzDevOpsOutputSuffixName \"${6:SuffixName}\"",
+            "\treturn \\$output$0"
+        ],
+        "description": "#Set service outputs"
+    }
+}

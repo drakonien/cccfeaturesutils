@@ -2,6 +2,7 @@
 
 import { Uri, window, ProgressLocation, workspace, Progress } from "vscode";
 import fs = require("fs");
+import path = require("path");
 import LogManager = require("./modules/LogManager");
 import utils = require("./modules/common");
 import cts = require("./modules/constants");
@@ -58,6 +59,6 @@ async function GetHeaders(uri: Uri, serviceInfo: iServiceData, progressItem: Pro
 }
 
 function getOperationFromTaskUri(uri: Uri): string {
-    const parts = uri.fsPath.split("\\");
+    const parts = uri.fsPath.split(path.sep);
     return parts[parts.length - 2];
 }
