@@ -14,7 +14,6 @@ import { CreateService } from "./CreateService";
 import { GetParameters } from "./GetParameters";
 import { GetUseCaseTable } from "./GetUseCaseTable";
 import { GetTestParameters } from "./GetTestParameters";
-import { UseSamuLint } from "./UseSamuLint";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -413,16 +412,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   //#endregion
 
-  //#region Use SamuLint
-
-    let useSamuLintContext = vscode.commands.registerCommand("ccc.SamuLintContext", (uri: vscode.Uri) => {
-    LogManager.LogDebug("Context [SamuLintContext] activated for folder: " + uri.fsPath);
-    // start process
-    UseSamuLint(uri);
-  });
-
-  //#endregion
-
   //#region Register subscriptions
 
   context.subscriptions.push(swaggerMaker);
@@ -445,7 +434,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(getUseCaseTableContext);
   context.subscriptions.push(getTestParameters);
   context.subscriptions.push(getTestParametersContext);
-  context.subscriptions.push(useSamuLintContext);
 
   //#endregion
 
