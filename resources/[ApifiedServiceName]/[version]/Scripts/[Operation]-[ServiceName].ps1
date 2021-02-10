@@ -1,14 +1,14 @@
 <#
 .SYNOPSIS
-	This Script will process the parameters for the Operation '[Operation]' of the Certified Service '[ServiceName]'
+    This Script will process the parameters for the Operation '[Operation]' of the Certified Service '[ServiceName]'
 
 .DESCRIPTION
 	In first place, the parameters will be merged in a PowerShell Custom Object,
-   similar to the Object resulting from the cmdlet 'CovertTo-Json'. After that,
-   the ARM Templates and Scripts that will accomplish the Operation will be called
-   and executed with the parameters needed from this parameters list.
+    similar to the Object resulting from the cmdlet 'CovertTo-Json'. After that,
+    the ARM Templates and Scripts that will accomplish the Operation will be called
+    and executed with the parameters needed from this parameters list.
 
-   Two sets of parameters will be offered to call this script:
+    Two sets of parameters will be offered to call this script:
        +   One set of parameters with only the resource group name and a path to a
            parameters file (ARM syntax). In this case, all the parameters will be passed
            from a file.
@@ -19,8 +19,8 @@
            an ARM Template, every parameter will be parsed accordingly.
 
 .PARAMETER PathToParameters
-   The path to the file that containes the values for the parameters needed in the operation,
-   in ARM template syntaxis.
+   The path to the file that contains the values for the parameters needed in the operation,
+   in ARM template syntax.
 
 .PARAMETER ResourceGroupName
    The name of the resource group in which the Operation will be executed.
@@ -127,7 +127,7 @@ function _importCccModules {
             Write-Verbose "##[$($MyInvocation.MyCommand)] Importing module '$($module.EntryPoint)'"
             if ( !$module.containsKey('Name') -or [string]::IsNullOrWhiteSpace($module.Name) ) {
                 #powershell library to load
-                $fullModulePath = Join-Path $scriptsDirectory $module.EntryPoint -Resolve -Verbose:$false #Resolve-Path -Path $module.EntryPoint
+                $fullModulePath = Join-Path $scriptsDirectory $module.EntryPoint -Resolve -Verbose:$false
             }
             else {
                 # CCC module (nuget)
@@ -140,7 +140,7 @@ function _importCccModules {
                     $fullModulePath = Join-Path -Path "$nugetPath/Scripts" -ChildPath $module.EntryPoint -Resolve -Verbose:$false
                 }
             }
-            Import-Module $fullModulePath -Force -Verbose:$false <#-Global#> | Out-Null
+            Import-Module $fullModulePath -Force -Verbose:$false | Out-Null
         }
         catch {
             Write-Verbose "##[$($MyInvocation.MyCommand)] ERROR: $($_.InvocationInfo | convertto-json -depth 1)"
@@ -207,8 +207,6 @@ $hashParameters = Get-ParametersHashTable -FunctionName '[Operation]-Ccc[Service
 
 #TODO:DEFINE PER SERVICE IF ADDITIONAL CONNECTIONS THAT NEED TO BE DONE
 
-#endregion
-
 #region Calculated parameters
 Write-Verbose "##[$($MyInvocation.MyCommand)] Initializing calculated parameters"
 
@@ -240,7 +238,7 @@ try {
     $output = [Operation]-Ccc[ServiceName]Deployment @hashParameters
 }
 catch {
-    Write-Cccverbose "ERROR: $($_.InvocationInfo | convertto-json -depth 1)"
+    Write-CccVerbose "ERROR: $($_.InvocationInfo | ConvertTo-Json -depth 1)"
     Write-CccException $_
 }
 finally {
