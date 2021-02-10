@@ -47,7 +47,7 @@ Use the `Extensions: Install from VSIX...` from the command palette.
 
 ## Requirements
 
-Visual Studio Code version 1.43.0 or up.
+Visual Studio Code version 1.50.0 or up.
 
 ## Extension Settings
 
@@ -76,3 +76,46 @@ Review the CHANGELOG.
 
 - Implement a formatter for README files to prevent common mistakes.
 - Use a list of regular expressions to validate folders, instead of a single one.
+
+## Debug Extension
+
+Put the following JSON in the `launch.json` file, inside the `.vscode` folder to configure extension debugging in VSCode
+
+```json
+// A launch configuration that compiles the extension and then opens it inside a new window
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "preLaunchTask": "npm: webpack"
+        },
+        {
+            "name": "Run Extension Clean VSCode",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "preLaunchTask": "npm: webpack"
+        }
+    ]
+}
+```
