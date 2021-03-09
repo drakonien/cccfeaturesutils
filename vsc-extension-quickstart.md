@@ -2,10 +2,10 @@
 
 ## To debug the extension
 
-Launch VSCode directly from the extension folder. In this case `cccfeaturesutils\1.0`.
+Launch VSCode directly from the extension folder. In this case `cccExtension\1.0`.
 
 ```powershell
-code absolutepath\cccfeaturesutils\1.0
+code absolutepath\cccExtension\1.0
 ```
 
 Put the following JSON in the `launch.json` file, inside the `.vscode` folder to configure extension debugging in VSCode
