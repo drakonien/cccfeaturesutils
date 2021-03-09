@@ -58,7 +58,7 @@ export async function CreateService(uri: Uri, extensionPath: string) {
                 }, 1000);
             });
 
-            await CreateDirectory(extensionPath + "/resources/[ApifiedServiceName]", newServicePath, progress);
+            await CreateDirectory(extensionPath + "/resources/[ServiceName]", newServicePath, progress);
             await RenameVersion(newServicePath, serviceInfo.fullPath, progress);
             await RenameFiles(serviceInfo, progress);
             await ReplaceTokensInFiles(serviceInfo, progress);

@@ -1,6 +1,6 @@
-# CCCFeaturesUtils
+# CCCExtension
 
-`CCCFeaturesUtils` is a VSCode extension to help automatize the development process of services for the Cloud Compentence Center's groups (iniatially developed for Features group, hence the name).
+`CCCExtension` is a VSCode extension to help automatize the development process of services for the Cloud Compentence Center.
 
 ## Features
 
@@ -28,6 +28,25 @@ To run this, either run the `Generate Swagger` command in the command palette or
 - Get the table of parameters of a task to use in the Readme. It reads info from the `Task.json` file of a task, opens a new file and writes the info in the new file. This functionality can be invoked using the `Get Use Case Table` command from the command palette or the `Get Use Case Table...` contextual menu in the file explorer, if invoked in a `task.json` file.
 
 - Get the initial structure of a test json file. It reads info from the `Task.json` file of a task, opens a new file and writes the info in the new file. This functionality can be invoked using the `Get Test Parameters` command from the command palette or the `Get Test Parameters...` contextual menu in the file explorer, if invoked in a `task.json` file.
+
+- PowerShell code snippets for:
+  - Write Tags: command is `settag`. Inserts the following code:
+
+  ```powershell
+    Write-CCCVerbose "Setting tag to resources."
+    Set-CccResourcesTagValue -Resources $resources -TagName "TagName" -TagValue "TagValue"
+    Write-CCCVerbose "Tags stablished"
+  ```
+
+  - Set Output: command is `setoutput`. Inserts the following code:
+
+  ```powershell
+    $output = @{}
+    $output = Invoke-CCCApifOutputVariable -Outputs $output -OutputName OutputName `
+        -OutputValue OutputValue -KeyVaultName KeyVaultName `
+        -ServiceName ServiceName -ServiceType ServiceType -AzDevOpsOutputSuffixName "SuffixName"
+    return $output
+  ```
 
 ### Command palette
 

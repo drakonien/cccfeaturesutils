@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // use the console to output diagnostic information (LogManager.LogDebug) and errors (console.error)
   // this line of code will only be executed once when your extension is activated
-  LogManager.LogDebug("Congratulations, your extension 'CCFeaturesUtils' is now active!");
+  LogManager.LogDebug("Congratulations, your extension 'CCCExtension' is now active!");
 
   LogManager.LogDebug("Registering commands...");
   // the command has been defined in the package.json file
