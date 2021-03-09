@@ -1,0 +1,352 @@
+{
+  "id": "[NewGUID]",
+  "name": "Api[ServiceName][Operation]Task",
+  "friendlyName": "Repsol CCC - [ServiceName] [Operation] ([Security Certification], [Allowed Environments])",
+  "description": "[Operation] a [ServiceName] Certified Service.",
+  "helpMarkDown": "Find the documentation related to this service in the [CCC Samples Wiki](https://dev.azure.com/repsol-digital-team/CCCSamples01/_wiki/).",
+  "category": "Deploy",
+  "preview": {
+    true if tagged as Preview,
+    false if tagged as GA
+  },
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Repsol Cloud Competence Center",
+  "version": {
+    "Major": [CertifiedServiceMajorVersion],
+    "Minor": [CertifiedServiceMinorVersion],
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "instanceNameFormat": "[Operation] CCC [ServiceName] in Resource Group $(ResourceGroupName) via $(ParameterSetSelector)",
+  "execution": {
+    "Node": {
+      "target": "ApiRequestAks.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "scriptPath": "[Operation]-[ServiceName]",
+    "InputGroups": "ResourceGroup,TaskParameterOptions,Outputs,Secrets,Logs"
+  },
+  "groups": [
+    {
+      "name": "TaskParameterOptions",
+      "displayName": "Parameter options",
+      "isExpanded": true
+    },
+    {
+      "name": "Secrets",
+      "displayName": "Service Secrets",
+      "isExpanded": true
+    },
+    {
+      "name": "Outputs",
+      "displayName": "Service Outputs",
+      "isExpanded": true
+    },
+    {
+      "name": "Logs",
+      "displayName": "Service Logs",
+      "isExpanded": true
+    },
+    {
+      "name": "ErrorVerboseParameterOptions",
+      "displayName": "Error & Verbose",
+      "isExpanded": false
+    }
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "label": "Azure Subscription",
+      "helpMarkDown": "Azure Resource Manager subscription to log in before running PowerShell.",
+      "type": "connectedService:AzureRM",
+      "required": true
+    },
+    {
+      "name": "ResourceGroupName",
+      "label": "Resource Group Name",
+      "helpMarkDown": "The name of the resource group in which the [ServiceName] Certified Service will be [Operation]ed.",
+      "type": "picklist",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "groupName": "TaskParameterOptions"
+    },
+    {
+      "name": "ParameterSetSelector",
+      "aliases": [
+        "ParameterSetType"
+      ],
+      "label": "Parameters specified by",
+      "helpMarkDown": "Indicate how you want to specify the parameter values.",
+      "type": "pickList",
+      "options": {
+        "ParametersFile": "File with parameter values",
+        "InputParameter": "Input parameter values"
+      },
+      "required": true,
+      "defaultValue": "ParametersFile",
+      "groupName": "TaskParameterOptions"
+    },
+    {
+      "name": "PathToParameters",
+      "label": "Path to parameters file",
+      "helpMarkDown": "The path to a parameter file with ARM syntax. Should be fully qualified path or relative to the default working directory. An example parameter file can be found in the README.md.",
+      "type": "filePath",
+      "required": true,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = ParametersFile"
+    },
+    {
+      "name": "overrideParameters",
+      "type": "multiLine",
+      "label": "Override parameters",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "TaskParameterOptions",
+      "helpMarkDown": "Type the parameters to override in the textbox.\n\nTo edit the override parameters in a grid, click on “…” next to Override template parameters text box.\n\nExample, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>If the parameter value you're using has multiple words, enclose them in quotes, even if you're passing them using variables. For example, -name \"parameter value\" -name2 \"$(var)\"<br>To override object type parameters use stringified JSON objects. For example, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
+      "visibleRule": "ParameterSetSelector = ParametersFile",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "[ServiceName]Location",
+      "label": "[ServiceName] location",
+      "helpMarkDown": "The location for [ServiceName].",
+      "type": "picklist",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = InputParameter"
+    },
+    {
+      "name": "[ExampleOfHelpMarkdownForParameterToEnableAuthentication]",
+      "label": "[ServiceName] Authorization",
+      "helpMarkDown": "A list of [Identity Type](link-to-related-docuementation) that will allow to grant data plane permissions on Service Items\n\nEach element of the array is a hashtable that must meet the following schema: <ul><li>**`\"objectId\"`**' : '*`\"string\"`*. The Email, Display Name or Object Id of the Azure AD principal to be granted with permissions</li><li>**`\"permissions\"`**` : `*`{hashtable}`*. A hashtable with the following elements:<ul><li>**`\"keys\"`**` : `*`\"string\"`*. The permissions to be granted to the [Key Vault keys](https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates#key-access-control) (`get`, `list`, `update`, `create`, `import`, `delete`, `recover`, `backup`, `restore`, `decrypt`, `encrypt`, `unwrapKey`, `wrapKey`, `verify`, `sign`, `purge`, `all`)</li><li>**`\"secrets\"`**` : `*`\"string\"`*. The permissions to be granted to the [Key Vault secrets](https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates#secret-access-control) (`get`, `list`, `set`, `delete`, `recover`, `backup`, `restore`, `purge`, `all`)</li><li>**`\"certificates\"`**` : `*`\"string\"`*. The permissions to be granted to the [Key Vault certificates](https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates#certificate-access-control) (`get`, `list`, `update`, `create`, `import`, `delete`, `recover`, `backup`, `restore`, `managecontacts`, `manageissuers`, `getissuers`, `listissuers`, `setissuers`, `deleteissuers`, `purge`, `all`)</li><li>**`\"storage\"`**` : `*`\"string\"`*. The permissions to be granted to the [Managed Storage Account](https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates#storage-account-access-control) (`get`, `list`, `update`, `delete`, `recover`, `backup`, `restore`, `set`, `regeneratekey`, `getsas`, `listsas`, `deletesas`, `setsas`, `purge`)</li></ul></li></ul>\n\nE.g. of valid value:\n`[`\n&nbsp;&nbsp;&nbsp;`{`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"objectId\" : \"r.lopez@servexternos.repsol.com\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"permissions\" : {`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"keys\" : [\"Get\", \"List\"],`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"secrets\" : [\"Get\",\"List\"],`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"certificates\" : [\"Get\",\"List\"],`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"storage\" : []`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}`\n&nbsp;&nbsp;&nbsp;`},`\n&nbsp;&nbsp;&nbsp;`{`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"objectId\" : \"4fc0433b-f6a1-4a90-b5f6-b59ac591d0f8\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"permissions\" : {`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"keys\" : [\"Get\",\"List\"],`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"secrets\" : [\"List\"],`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"certificates\" : [\"All\"],`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"storage\" : []`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}`\n&nbsp;&nbsp;&nbsp;`}`\n`]`",
+      "type": "multiLine",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = InputParameter",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "[ExampleOfHelpMarkdownForParametersRelatedToFirewallAllowMicrosoftServices]",
+      "label": "[ServiceName] Firewall -  Allow Microsoft Services",
+      "helpMarkDown": "Allows [trusted Microsoft services](link-to-related-documentation) to bypass the firewall.\nTrusted services include:<ul><li>Azure Virtual Machine Deployment Service</li><li>Azure Resource Manager Template Deployment Service</li><li>Azure Disk Encryption volume encryption service</li><li>Azure Backup</li><li>Exchange Online</li><li>Sharepoint Online</li><li>Azure Information Protection</li><li>Azure App Service: Web App</li><li>Azure SQL</li><li>Azure Storage</li><li>Azure Data Lake Storage</li></ul>",
+      "type": "boolean",
+      "required": false,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = InputParameter && [ParameterToEnableFirewall] = true"
+    },
+    {
+      "name": "[ExampleOfHelpMarkdownForParametersRelatedToFirewallAllowedPublicIPs]",
+      "label": "[ServiceName] Firewall - Allow Public IPs",
+      "helpMarkDown": "Grant access to traffic from specific public [internet IP address ranges](link-to-related-documentation)\nEach element of the array is a `string` that must meet one of the following formats:<ul><li>Single IP (e.g. `\"195.53.125.0\"`)</li><li>CSV of IPs (e.g. `\"195.53.125.0,195.53.125.120\"`)</li><li>CIDR (e.g. `\"195.53.125.0/24\"`)</li><li>Range of IPs (e.g. `\"195.55.119.5-195.55.119.60\"`)</li></ul>E.g. of valid value:\n`[`\r\n&nbsp;&nbsp;&nbsp;`\"195.53.125.0\",`\n&nbsp;&nbsp;&nbsp;`\"195.53.125.0,195.53.125.120\",`\n&nbsp;&nbsp;&nbsp;`\"195.53.125.0/24\",`\n&nbsp;&nbsp;&nbsp;`\"195.55.119.5-195.55.119.60\"`\n`]`",
+      "type": "multiline",
+      "required": false,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = InputParameter && [ParameterToEnableFirewall] = true"
+    },
+    {
+      "name": "[ExampleOfHelpMarkdownForParametersRelatedToFirewallAllowedSubnets]",
+      "label": "[ServiceName] Firewall - Allow Azure Virtual Networks",
+      "helpMarkDown": "Grant access to traffic from specific [Azure virtual networks](link-to-related-documentation)\n\nPrerrequisites:<ul><li>The Virtual Network subnet must have the [`Azure Key Vault` service endpoint enabled](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview)</li><li>The Deployment Service principal must have the RBAC permission [`Microsoft.Network/JoinServicetoaSubnet` granted on the Virtual Network subnet](https://docs.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftnetwork)</li></ul>\n\nEach element of the array is a hashtable that must meet the following schema:<ul><li>**`\"VNetSubscriptionId\"`**` : `*`\"string\"`*. The subscription of the Virtual Network to be allowed</li><li>**`\"VNetResourceGroupName\"`**` : `*`\"string\"`*. The Resource Group of the Virtual Network to be allowed</li><li>**`\"VNetName\"`**` : `*`\"string\"`*. The name of the Virtual Network to be allowed</li><li>**`\"VNetSubnetName\"`**` : `*`\"string\"`*. The name of the Subnet to be allowed</li></ul>E.g. of valid value:\n`[`\n&nbsp;&nbsp;&nbsp;`{`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetSubscriptionId\" : \"0a25214f-ee52-483c-b96b-dc79f3227a6f\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetResourceGroupName\" : \"EngineeringServiceTests\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetName\" : \"testreleasevnet\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetSubnetName\" : \"testreleasevnet\"`\n&nbsp;&nbsp;&nbsp;`},`\n&nbsp;&nbsp;&nbsp;`{`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetSubscriptionId\" : \"0a25214f-ee52-483c-b96b-dc79f3227a6f\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetResourceGroupName\" : \"testsubnet10tests\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetName\" : \"testvnet\",`\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`\"VNetSubnetName\" : \"testsubvnet\"`\n&nbsp;&nbsp;&nbsp;`}`\n`]`",
+      "type": "multiline",
+      "required": false,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = InputParameter && [ParameterToEnableFirewall] = true"
+    },
+    {
+      "name": "[ExampleOfPickList]",
+      "label": "[Eample Of PickList]",
+      "helpMarkDown": "[The description of the parameter copied from the README.md]",
+      "type": "picklist",
+      "options": {
+        "Value1": "Label for value 1",
+        "Value2": "Label for value 2"
+      },
+      "required": false,
+      "defaultValue": "Value2",
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = ParametersFile"
+    },
+    {
+      "name": "[ExampleOfInteger]",
+      "label": "[Eample Of Integer]",
+      "helpMarkDown": "[The description of the parameter copied from the README.md]",
+      "type": "Int",
+      "required": true,
+      "defaultValue": 2,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = ParametersFile && [ExampleOfPickList] = Value2"
+    },
+    {
+      "name": "[ExampleOfString]",
+      "label": "[Eample Of String]",
+      "helpMarkDown": "[The description of the parameter copied from the README.md]",
+      "type": "string",
+      "required": true,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = ParametersFile"
+    },
+    {
+      "name": "[ExampleOfMultilineString]",
+      "label": "[Eample Of Multiline String]",
+      "helpMarkDown": "[The description of the parameter copied from the README.md]",
+      "type": "multiline",
+      "required": true,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = ParametersFile"
+    },
+    {
+      "name": "[ExampleOfBoolean]",
+      "label": "[Eample Of Boolean]",
+      "helpMarkDown": "[The description of the parameter copied from the README.md]",
+      "type": "boolean",
+      "required": true,
+      "defaultValue": false,
+      "groupName": "TaskParameterOptions",
+      "visibleRule": "ParameterSetSelector = ParametersFile"
+    },
+    {
+      "name": "[ExampleOfDevelopmentEnvironmentInput]",
+      "label": "[ExampleOfDevelopmentEnvironmentInput]",
+      "helpMarkDown": "[This input will be only displayed in the extension deployed to Engineering environment]",
+      "type": "pickList",
+      "required": false,
+      "properties": {
+        "DevelopmentEnvironment": "True"
+      },
+      "groupName": "TaskParameterOptions"
+    },
+    {
+      "name": "{ServiceName}SecretsAuthorizedServicePrincipals",
+      "label": "Authorized Service Principals (Secrets Key Vault name : {StorageAccountName}kv)",
+      "helpMarkDown": "The list of Service Principals that will be allowed to access the Storage Account related secrets on the Key Vault with name `{StorageAccountName}`kv.\n\nEach element of the array is a `string` that will contain the Service Principal Display Name, Object Id or Application Id to be granted with access.\n\nE.g. of valid value:\n`[`\n&nbsp;&nbsp;&nbsp;`\"Repsol_VSTS_RepsolCCC01_CCC_12168da9-ce0c-4768-af91-475b517438f6_z0euw1edmrsg041\",`\n&nbsp;&nbsp;&nbsp;`\"56407ba6-803e-4c9c-a61f-44c757b30f06\"`\n`]`",
+      "type": "multiline",
+      "required": false,
+      "groupName": "Secrets",
+      "properties": {
+        "resizable": "false"
+      }
+    },
+    {
+      "name": "{ServiceName}SecretName{Secret1}",
+      "label": "Secret name - {Secret 1} (Default secret name: SA-{ServiceName}-Key1)",
+      "helpMarkDown": "{Short description with links to Azure doc}.\n\nIf empty, the name of the secret will be `SA-{ServiceName}-Key1`.",
+      "type": "string",
+      "required": false,
+      "groupName": "Secrets"
+    },
+    {
+      "name": "{ServiceName}OutputKeyVaultName",
+      "label": "Key Vault name",
+      "helpMarkDown": "The name of the Key Vault where the output variables will be stored as Key Vault secrets.\n\nIf empty, the variables will be written only as Azure DevOps pipeline variables.",
+      "type": "pickList",
+      "groupName": "Outputs",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "{ServiceName}OutputVariable{Output1}",
+      "label": "Variable Name - {Output 1} (Default name: CCCOutput-wst-{WindowsAppServiceName}-OutboundIpAddresses)",
+      "helpMarkDown": "The name of the variable where the [Outbound IP Addresses](https://docs.microsoft.com/en-us/azure/app-service/overview-inbound-outbound-ips#when-outbound-ips-change) will be stored.\n\nIf empty, the name of the variable will be `CCCOutput-wst-{WindowsAppServiceName}-OutboundIpAddresses`.\n\nThe variable will be created as an [Azure DevOps release variable](https://docs.microsoft.com/en-us/azure/devops/pipelines/release/variables?view=vsts&tabs=powershell#set-in-script). If a Key Vault has been given, it will also be created as a Key Vault secret.",
+      "type": "string",
+      "required": false,
+      "groupName": "Outputs"
+    },
+    {
+      "name": "[ServiceName]OMSWorkspaceResourceId",
+      "label": "Log Analytics Workspace ID to Log Diagnostic Settings",
+      "helpMarkDown": "[Diagnostic Settings](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/resource-logs-collect-workspace) allow you to trace operational logs and metrics. It is mandatory to set it in Acceptance and Production environments.",
+      "type": "pickList",
+      "groupName": "Logs",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "errorActionPreference",
+      "type": "pickList",
+      "label": "ErrorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "groupName": "ErrorVerboseParameterOptions",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "Select the value of the ErrorActionPreference variable for executing the script."
+    },
+    {
+      "name": "FailOnStandardError",
+      "type": "boolean",
+      "label": "Fail on Standard Error",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "ErrorVerboseParameterOptions",
+      "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
+    },
+    {
+      "name": "VerboseActivated",
+      "type": "boolean",
+      "label": "Display Verbose Stream",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "ErrorVerboseParameterOptions",
+      "helpMarkDown": "If this is true, any data written to the Standard Verbose stream will be displayed in task logs."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "[ServiceName]Location",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "[ServiceName]OutputKeyVaultName",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resources?$filter=resourceType eq 'Microsoft.KeyVault/vaults'&api-version=2018-11-01",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\":\"{{name}}\"}"
+    },
+    {
+      "target": "[ServiceName]OMSWorkspaceResourceId",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resources?$filter=resourceType eq 'Microsoft.OperationalInsights/workspaces'&api-version=2018-11-01",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\":\"{{name}}\"}"
+    }
+  ]
+}
